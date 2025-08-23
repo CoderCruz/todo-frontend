@@ -59,37 +59,37 @@ export default function HomePage() {
       <div className="mx-auto mt-2 max-w-xl">
         <Link
           href="/tasks/new"
-          className="flex z-400000 mt-12 w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="flex relative z-400000 -mt-15 w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
         >
           Create Task
-          <img src="/plus.svg" alt="" className="h-4 w-4 opacity-90" />
+          <img src="/plus.svg" alt="plus sign" className="h-4 w-4 opacity-90" />
         </Link>
       </div>
 
-      <section className="rounded-xl bg-neutral-900/0">
-        <div className="flex items-center justify-between text-sm text-neutral-300">
+      <section aria-label="Task summary">
+        <div className="flex items-center justify-between text-sm">
           <div className="flex items-center gap-2">
-            <span className="text-neutral-200">Tasks</span>
-            <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-200">
+            <span className="font-semibold text-sky-400">Tasks</span>
+            <span className="rounded-full bg-neutral-700 px-2 py-0.5 text-xs text-neutral-100/90">
               {total}
             </span>
           </div>
+
           <div className="flex items-center gap-2">
-            <span className="text-neutral-200">Completed</span>
-            <span className="rounded-full bg-neutral-800 px-2 py-0.5 text-xs text-neutral-200">
-              {completed}
+            <span className="font-semibold text-violet-400">Completed</span>
+            <span className="rounded-full bg-neutral-700 px-2 py-0.5 text-xs text-neutral-100/90">
+              {completed} <span className="mx-0.5">de</span> {total}
             </span>
           </div>
         </div>
-        <div className="mt-2 h-px w-full bg-neutral-800" />
-      </section>
 
-      {err && <p className="text-sm text-red-400">{err}</p>}
+        <div className="mt-2 h-px w-full bg-neutral-800" />
+      </section>      {err && <p className="text-sm text-red-400">{err}</p>}
 
       {!tasks ? (
         <p className="text-neutral-400">Loading…</p>
       ) : tasks.length === 0 ? (
-        <div className="flex flex-col items-center gap-2 rounded-xl border border-neutral-800 bg-neutral-900/40 px-6 py-16 text-center">
+        <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
           <img src="/clipboard.svg" alt="" className="mb-2 h-10 w-10 opacity-60" />
           <p className="text-neutral-300">You don't have any tasks registered yet.</p>
           <p className="text-sm text-neutral-400">

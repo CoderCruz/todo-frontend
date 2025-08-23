@@ -1,8 +1,7 @@
 'use client';
 
-import { COLOR_BG } from '@/lib/colors';
+import { useRouter } from 'next/navigation';
 import type { Task } from '@/types';
-import Link from 'next/link';
 
 export default function TaskItem({
   task,
@@ -13,35 +12,73 @@ export default function TaskItem({
   onToggle: (task: Task) => void;
   onDelete: (id: number) => void;
 }) {
-  const dotClass = COLOR_BG[task.color];
+  const router = useRouter();
+
+  const goEdit = () => router.push(`/tasks/${task.id}/edit`);
+
+  const handleRowClick = (e: React.MouseEvent<HTMLLIElement>) => {
+    if ((e.target as HTMLElement).closest('[data-stop-nav]')) return;
+    goEdit();
+  };
+
+  const handleRowKey = (e: React.KeyboardEvent<HTMLLIElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      goEdit();
+    }
+  };
 
   return (
-    <li className="flex items-center justify-between rounded-lg border border-neutral-800 bg-neutral-900 px-3 py-2 shadow-sm">
-      <div className="flex items-center gap-3">
-        <span className={`h-3 w-3 rounded-full ${dotClass}`} aria-hidden />
-        <button
-          onClick={() => onToggle(task)}
-          className="flex items-center gap-2"
-          title="Toggle complete"
-        >
-          <img src="/check.svg" alt="" className="h-5 w-5 opacity-80" />
-          <span className={task.completed ? 'line-through text-neutral-500' : 'text-neutral-100'}>
+    <li
+      onClick={handleRowClick}
+      onKeyDown={handleRowKey}
+      tabIndex={0}
+      role="button"
+      aria-label={`Edit task: ${task.title}`}
+      className="group cursor-pointer rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-3 shadow-sm transition hover:border-neutral-700 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-start gap-3">
+          <button
+            data-stop-nav
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggle(task);
+            }}
+            title={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
+            aria-pressed={task.completed}
+            className="grid h-5 w-5 place-items-center rounded-full ring-2 ring-sky-400 transition focus:outline-none focus:ring-2 focus:ring-sky-300"
+          >
+            {task.completed ? (
+              <span className="grid h-3.5 w-3.5 place-items-center rounded-full bg-violet-500" />
+            ) : (
+              <span className="h-3.5 w-3.5 rounded-full bg-neutral-900" />
+            )}
+          </button>
+
+          <p
+            className={
+              task.completed
+                ? 'truncate text-neutral-500 line-through'
+                : 'truncate text-neutral-200'
+            }
+            title={task.title}
+          >
             {task.title}
-          </span>
-        </button>
-      </div>
-      <div className="flex items-center gap-3">
-        <Link
-          href={`/tasks/${task.id}/edit`}
-          className="rounded-md border border-neutral-700 px-2 py-1 text-sm text-neutral-200 hover:bg-neutral-800"
-        >
-          Edit
-        </Link>
+          </p>
+        </div>
+
         <button
-          onClick={() => onDelete(task.id)}
-          className="rounded-md border border-neutral-700 px-2 py-1 text-sm text-red-400 hover:bg-red-950/40"
+          data-stop-nav
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(task.id);
+          }}
+          className="inline-flex h-7 w-7 items-center justify-center rounded-md border border-neutral-700 text-neutral-400 transition hover:bg-neutral-800 hover:text-neutral-200"
+          aria-label="Delete task"
+          title="Delete task"
         >
-          Delete
+          <img src="/trash.svg" alt="" className="h-4 w-4" />
         </button>
       </div>
     </li>

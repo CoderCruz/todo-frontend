@@ -4,16 +4,10 @@ export const COLOR_BG: Record<TaskColor, string> = {
   red: 'bg-red-500',
   blue: 'bg-blue-500',
   green: 'bg-green-500',
-};
-
-export const COLOR_RING: Record<TaskColor, string> = {
-  red: 'ring-red-400',
-  blue: 'ring-blue-400',
-  green: 'ring-green-400',
-};
-
-export const COLOR_TEXT: Record<TaskColor, string> = {
-  red: 'text-red-600',
-  blue: 'text-blue-600',
-  green: 'text-green-600',
+  orange: 'bg-orange-500',
+  yellow: 'bg-yellow-400',
+  indigo: 'bg-indigo-500',
+  violet: 'bg-violet-500',
+  pink: 'bg-pink-500',
+  brown: 'bg-amber-700',
 };
