@@ -49,7 +49,7 @@ export default function HomePage() {
     const prev = tasks;
     setTasks(prev.filter((t) => t.id !== id));
     try {
-      await deleteTask(id as any); // keep your api signature; ideally align types
+      await deleteTask(id as any);
     } catch {
       setTasks(prev);
       setErr('Failed to delete task');
@@ -61,7 +61,7 @@ export default function HomePage() {
       <div className="mx-auto mt-2 max-w-xl">
         <Link
           href="/tasks/new"
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="relative z-400 -mt-15 flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
         >
           Create Task
           <Image src="/plus.svg" alt="" width={16} height={16} className="opacity-90" />
