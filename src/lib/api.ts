@@ -10,14 +10,13 @@ async function handle<T>(res: Response): Promise<T> {
     const txt = await res.text().catch(() => '');
     throw new Error(`${res.status} ${res.statusText}${txt ? ` - ${txt}` : ''}`);
   }
-  if (res.status === 204) return undefined as T; // no content
+  if (res.status === 204) return undefined as T;
   const text = await res.text();
   return (text ? JSON.parse(text) : undefined) as T;
 }
 
 export async function deleteTask(id: number): Promise<{ success: true }> {
   const res = await fetch(`${API}/tasks/${id}`, { method: 'DELETE' });
-  // accept 204 or 404 as “done” if you made the route strict:
   if (res.status === 404) return { success: true };
   await handle<void>(res);
   return { success: true };

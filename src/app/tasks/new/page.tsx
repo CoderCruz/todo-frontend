@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import TaskForm from '@/components/TaskForm';
-import { createTask } from '@/lib/api';   // <-- import the API
+import { createTask } from '@/lib/api';
 
 export default function NewTaskPage() {
   const router = useRouter();
