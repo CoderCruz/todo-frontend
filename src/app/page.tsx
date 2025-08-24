@@ -1,22 +1,24 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import TaskItem from '@/components/TaskItem';
 import { deleteTask, getTasks, updateTask } from '@/lib/api';
 import type { Task } from '@/lib/types';
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[] | null>(null);
-  const [err, setErr] = useState<string>('');
+  const [err, setErr] = useState<string | null>(null);
 
   async function load() {
     try {
-      setErr('');
+      setErr(null);
       const data = await getTasks();
       setTasks(data);
-    } catch (e: unknown) {
-      setErr(e?.message ?? 'Failed to load tasks');
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : 'Failed to load tasks';
+      setErr(msg);
     }
   }
 
@@ -24,7 +26,7 @@ export default function HomePage() {
     load();
   }, []);
 
-  const completed = useMemo(() => tasks?.filter((t) => t.completed).length ?? 0, [tasks]);
+  const completed = tasks?.filter((t) => t.completed).length ?? 0;
   const total = tasks?.length ?? 0;
 
   async function handleToggle(task: Task) {
@@ -42,12 +44,12 @@ export default function HomePage() {
     }
   }
 
-  async function handleDelete(id: number) {
+  async function handleDelete(id: Task['id']) {
     if (!tasks) return;
     const prev = tasks;
     setTasks(prev.filter((t) => t.id !== id));
     try {
-      await deleteTask(id);
+      await deleteTask(id as any); // keep your api signature; ideally align types
     } catch {
       setTasks(prev);
       setErr('Failed to delete task');
@@ -55,14 +57,14 @@ export default function HomePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <main className="space-y-6">
       <div className="mx-auto mt-2 max-w-xl">
         <Link
           href="/tasks/new"
-          className="flex relative z-400000 -mt-15 w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-4 py-3 text-base font-semibold text-white shadow-lg ring-1 ring-sky-400/50 hover:bg-sky-500 focus:outline-none focus:ring-2 focus:ring-sky-300"
         >
           Create Task
-          <img src="/plus.svg" alt="plus sign" className="h-4 w-4 opacity-90" />
+          <Image src="/plus.svg" alt="" width={16} height={16} className="opacity-90" />
         </Link>
       </div>
 
@@ -78,23 +80,23 @@ export default function HomePage() {
           <div className="flex items-center gap-2">
             <span className="font-semibold text-violet-400">Completed</span>
             <span className="rounded-full bg-neutral-700 px-2 py-0.5 text-xs text-neutral-100/90">
-              {completed} <span className="mx-0.5">de</span> {total}
+              {completed} <span className="mx-0.5">of</span> {total}
             </span>
           </div>
         </div>
 
         <div className="mt-2 h-px w-full bg-neutral-800" />
-      </section>      {err && <p className="text-sm text-red-400">{err}</p>}
+      </section>
+
+      {err && <p className="text-sm text-red-400">{err}</p>}
 
       {!tasks ? (
         <p className="text-neutral-400">Loading…</p>
       ) : tasks.length === 0 ? (
         <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
-          <img src="/clipboard.svg" alt="" className="mb-2 h-10 w-10 opacity-60" />
+          <Image src="/clipboard.svg" alt="" width={40} height={40} className="mb-2 opacity-60" />
           <p className="text-neutral-300">You don&apos;t have any tasks registered yet.</p>
-          <p className="text-sm text-neutral-400">
-            Create tasks and organize your to-do items.
-          </p>
+          <p className="text-sm text-neutral-400">Create tasks and organize your to-do items.</p>
         </div>
       ) : (
         <ul className="space-y-2">
@@ -103,7 +105,7 @@ export default function HomePage() {
           ))}
         </ul>
       )}
-    </div>
+    </main>
   );
 }
 
