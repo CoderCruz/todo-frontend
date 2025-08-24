@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import TaskItem from '@/components/TaskItem';
 import { deleteTask, getTasks, updateTask } from '@/lib/api';
-import type { Task } from '@/types';
+import type { Task } from '@/lib/types';
 
 export default function HomePage() {
   const [tasks, setTasks] = useState<Task[] | null>(null);
@@ -15,7 +15,7 @@ export default function HomePage() {
       setErr('');
       const data = await getTasks();
       setTasks(data);
-    } catch (e: unkown) {
+    } catch (e: unknown) {
       setErr(e?.message ?? 'Failed to load tasks');
     }
   }
