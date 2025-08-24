@@ -63,8 +63,8 @@ export default function TaskForm({
     try {
       setLoading(true);
       await onSubmit({ title: safeTitle, color });
-    } catch (ex: any) {
-      setErr(ex?.message ?? 'Something went wrong.');
+    } catch (e: unknown) {
+      setErr(e?.message ?? 'Something went wrong.');
     } finally {
       setLoading(false);
     }

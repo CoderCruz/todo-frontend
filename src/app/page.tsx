@@ -15,7 +15,7 @@ export default function HomePage() {
       setErr('');
       const data = await getTasks();
       setTasks(data);
-    } catch (e: any) {
+    } catch (e: unkown) {
       setErr(e?.message ?? 'Failed to load tasks');
     }
   }
@@ -91,7 +91,7 @@ export default function HomePage() {
       ) : tasks.length === 0 ? (
         <div className="flex flex-col items-center gap-2 px-6 py-16 text-center">
           <img src="/clipboard.svg" alt="" className="mb-2 h-10 w-10 opacity-60" />
-          <p className="text-neutral-300">You don't have any tasks registered yet.</p>
+          <p className="text-neutral-300">You don&apos;t have any tasks registered yet.</p>
           <p className="text-sm text-neutral-400">
             Create tasks and organize your to-do items.
           </p>

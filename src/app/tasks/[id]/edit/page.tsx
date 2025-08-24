@@ -18,7 +18,7 @@ export default function EditTaskPage() {
       try {
         const t = await getTask(Number(id));
         if (alive) setTask(t);
-      } catch (e: any) {
+      } catch (e: unknown) {
         setErr(e?.message ?? 'Failed to load task');
       }
     })();
