@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import TaskItem from '@/components/TaskItem';
@@ -29,9 +29,21 @@ export default function HomePage() {
   const completed = tasks?.filter((t) => t.completed).length ?? 0;
   const total = tasks?.length ?? 0;
 
+  const displayTasks = useMemo(() => {
+    if (!tasks) return [];
+    return [...tasks].sort((a, b) => {
+      const byDone = Number(a.completed) - Number(b.completed);
+      if (byDone !== 0) return byDone;
+
+      const da = a.updatedAt ? new Date(a.updatedAt).getTime() : 0;
+      const db = b.updatedAt ? new Date(b.updatedAt).getTime() : 0;
+      return db - da;
+    });
+  }, [tasks]);
+
   async function handleToggle(task: Task) {
     if (!tasks) return;
-    const prev = tasks;
+    const prev = tasks.slice();
     const optimistic = prev.map((t) =>
       t.id === task.id ? { ...t, completed: !t.completed, updatedAt: new Date().toISOString() } : t
     );
@@ -46,7 +58,7 @@ export default function HomePage() {
 
   async function handleDelete(id: Task['id']) {
     if (!tasks) return;
-    const prev = tasks;
+    const prev = tasks.slice();
     setTasks(prev.filter((t) => t.id !== id));
     try {
       await deleteTask(id as any);
@@ -100,7 +112,7 @@ export default function HomePage() {
         </div>
       ) : (
         <ul className="space-y-2">
-          {tasks.map((t) => (
+          {displayTasks.map((t) => (
             <TaskItem key={t.id} task={t} onToggle={handleToggle} onDelete={handleDelete} />
           ))}
         </ul>
